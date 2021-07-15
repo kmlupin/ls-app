@@ -15,6 +15,10 @@ const StyledRating = withStyles({
   },
 })(Rating);
 
+var wikidatanpm = require("wikidatanpm");
+const wkd = require('wikidatanpm');
+await wkd.getWikiId('Miguel de Cervantes');
+
 function App() {
   const [suche, getSuche] = useState(null);
   const [print, setPrint] = useState(false)
@@ -25,7 +29,7 @@ function App() {
   }
 
 
-const axios = require('axios');
+const axios = require('axios').default;
 const baseURL =
     'https://query.wikidata.org/sparql?format=json&query=';
 
@@ -76,7 +80,7 @@ const getWikiId = (suche, language) => {
           id="sucheE" 
           label="🔍 Suche eingeben" 
           variant="outlined" 
-          onChange={getWikiId} 
+          onChange={getData} 
           style={{ margin: 8 }} 
           placeholder="Suche nach einer Berühmten person. 🔍"
           fullWidth
