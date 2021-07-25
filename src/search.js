@@ -1,8 +1,9 @@
-const axios = require('axios');
+import axios from 'axios';
+
 const baseURL =
     'https://query.wikidata.org/sparql?format=json&query=';
 
-const getWikiId = (search, language) => {
+export function getWikiId (search, language){
     const lang = language || 'de';
     const query = `
     SELECT * WHERE {
@@ -32,9 +33,5 @@ const getWikiId = (search, language) => {
               )
             : null;
     });
-};
-
-module.exports = {   
-    getWikiId,   
 };
 
