@@ -5,7 +5,13 @@ import { ButtonGroup, Typography, Button, TextField, Box, Grid, Paper} from '@ma
 import { withStyles, styled } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import FavoriteIcon from '@material-ui/icons/Favorite'; 
-import {getWikiId} from './search.js' 
+
+import { getWikiId } from './search.js'
+import { getGeburtsOrt } from './search.js'
+import { getGeburtsLand } from './search.js';
+import { getBild } from './search.js';
+import { getGeburtsDatum } from './search.js';
+
 
 const StyledRating = withStyles({
   iconFilled: {
@@ -17,7 +23,7 @@ const StyledRating = withStyles({
 })(Rating);
 
 const Zentrum = styled(Paper)(({ theme }) => ({  
-  textAlign: 'center',  
+  textAlign: 'left',  
 }));
 
 function App() { 
@@ -26,7 +32,7 @@ function App() {
   const [ergebnis, setErgebnis] = useState("")
 
   function suche(){
-    getWikiId(suchWert).then((value)=>{
+    getGeburtsDatum(suchWert).then((value)=>{
       setErgebnis(value)
       console.log(ergebnis)
     })    
@@ -65,7 +71,8 @@ function App() {
             color="primary" 
             style={{ margin: 8 }}
             size= "large"
-            onClick={suche}          
+            onClick={suche}
+            disableElevation          
           >
             Suche Starten
           </Button>          
@@ -78,7 +85,8 @@ function App() {
           <Box id="textA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
            Ausgabe 1
 
-           <h1>Die Id ist {ergebnis}</h1> 
+           <h4>{suchWert}</h4>
+           <h4>{ergebnis}</h4> 
 
           </Box>
           </Zentrum>
@@ -122,7 +130,13 @@ function App() {
             />
             </Box>
 
-            <Button id="bewertungAbgeben" variant="contained" color="primary" size= "large" style={{ marginTop: 10}} >
+            <Button 
+              id="bewertungAbgeben" 
+              variant="contained" 
+              color="primary" 
+              size= "large" 
+              style={{ marginTop: 10}}              
+            >
               Bewertung Abgeben
             </Button> 
           </Grid>                      
