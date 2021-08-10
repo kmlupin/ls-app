@@ -11,6 +11,7 @@ import { getGeburtsOrt } from './search.js'
 import { getGeburtsLand } from './search.js';
 import { getBild } from './search.js';
 import { getGeburtsDatum } from './search.js';
+import { getBeruf } from './search.js';
 
 
 const StyledRating = withStyles({
@@ -30,12 +31,19 @@ function App() {
   
   const [suchWert, setSuchWert] = useState("")
   const [ergebnis, setErgebnis] = useState("")
+  const [ergebnis2, setErgebnis2] = useState("")
 
   function suche(){
     getGeburtsDatum(suchWert).then((value)=>{
-      setErgebnis(value)
+      setErgebnis(value)      
       console.log(ergebnis)
-    })    
+    })   
+    
+    getGeburtsLand(suchWert).then((value)=>{
+      setErgebnis2(value)      
+      console.log(ergebnis)
+    }) 
+
   }
 
   function textFeldchanged(val){
@@ -58,7 +66,7 @@ function App() {
               variant="outlined" 
               onChange={textFeldchanged} 
               style={{ margin: 8 }} 
-              placeholder="Suche nach einer Berühmten person. 🔍"
+              placeholder="Suche nach einer Person. 🔍"
               fullWidth
           >    
           </TextField> 
@@ -85,8 +93,8 @@ function App() {
           <Box id="textA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
            Ausgabe 1
 
-           <h4>{suchWert}</h4>
            <h4>{ergebnis}</h4> 
+           <h4>{ergebnis2}</h4> 
 
           </Box>
           </Zentrum>

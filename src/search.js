@@ -10,9 +10,9 @@ export function getWikiId (search, language){
     SELECT * WHERE {
         SERVICE wikibase:mwapi {
             bd:serviceParam wikibase:endpoint "www.wikidata.org";
-                            wikibase:api "EntitySearch";
-                            mwapi:search "${search}";
-                            mwapi:language "${lang}".
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
             ?item wikibase:apiOutputItem mwapi:item.
             ?num wikibase:apiOrdinal true.
         }
@@ -40,13 +40,17 @@ export function getWikiId (search, language){
 export function getGeburtsOrt (search, language){
     const lang = language || 'de';
     const query = `
-    SELECT ?personLabel ?placeOfBirthLabel {
-        BIND("${search}"@${lang} AS ?personLabel) ?person wdt:P19 ?placeOfBirth;  
-        wikibase:sitelinks ?linkcount;
-        rdfs:label ?personLabel.        
+    SELECT ?itemLabel ?placeOfBirthLabel WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+            }
+        ?item wdt:P19 ?placeOfBirth.
         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
-    }
-    LIMIT 1
+    } LIMIT 1
     `;
 
     return axios.get(baseURL + encodeURI(query)).then((res, err) => {
@@ -66,15 +70,20 @@ export function getGeburtsOrt (search, language){
 
 //Ausgabe Geburtsland
 export function getGeburtsLand (search, language){
-    const lang = language || 'en';
+    const lang = language || 'de';
     const query = `
-    SELECT ?personLabel ?countryLabel WHERE {
-        BIND("${search}"@${lang} AS ?personLabel) ?person wdt:P19 ?placeOfBirth;          
-        rdfs:label ?personLabel.    
-        ?placeOfBirth (wdt:P17+) ?country.    
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],de". }
-    }    
-    LIMIT 1
+    SELECT ?itemLabel ?countryLabel WHERE {
+    SERVICE wikibase:mwapi {
+        bd:serviceParam wikibase:endpoint "www.wikidata.org";
+            wikibase:api "EntitySearch";
+            mwapi:search "${search}";
+            mwapi:language "${lang}".
+        ?item wikibase:apiOutputItem mwapi:item.            
+    }
+    ?item wdt:P19 ?placeOfBirth.
+    ?placeOfBirth wdt:P17 ?country.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+    } LIMIT 1
     `;
 
     return axios.get(baseURL + encodeURI(query)).then((res, err) => {
@@ -93,16 +102,19 @@ export function getGeburtsLand (search, language){
 };
 
 export function getGeburtsDatum (search, language){
-    const lang = language || 'de';
-    const query = `
-    SELECT ?personLabel (CONCAT(STR(DAY(?dateOfBirth)),".",STR(MONTH(?dateOfBirth)),".",STR(YEAR(?dateOfBirth))) as ?dateOfBirthStr) WHERE {
-        BIND("${search}"@${lang} AS ?personLabel) ?person wdt:P569 ?dateOfBirth;      
-        wikibase:sitelinks ?linkcount;
-        rdfs:label ?personLabel.  
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],de". }
-    }
-    GROUP BY ?personLabel ?dateOfBirth
-    LIMIT 1
+    const lang = 'de';
+    const query = `    
+    SELECT ?itemLabel (CONCAT(STR(DAY(?dateOfBirth)),".",STR(MONTH(?dateOfBirth)),".",STR(YEAR(?dateOfBirth))) as ?dateOfBirthStr) WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }
+        ?item wdt:P569 ?dateOfBirth.
+         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+      } LIMIT 1
     `;
 
     return axios.get(baseURL + encodeURI(query)).then((res, err) => {
@@ -140,4 +152,36 @@ export function getBild (search, language){
         );        
         });
 };
+
+export function getBeruf (search, language){
+    const lang = language || 'de';
+    const query = `
+    SELECT ?itemLabel ?occupationLabel WHERE {  
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }  
+        ?item wdt:P106 ?occupation.  
+         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+      } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].occupationLabel &&
+            res.data.results.bindings[0].occupationLabel.value
+                ? res.data.results.bindings[0].occupationLabel.value
+                : null,
+        );
+    });
+};
+
 
