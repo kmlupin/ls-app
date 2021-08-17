@@ -32,6 +32,7 @@ function App() {
   const [suchWert, setSuchWert] = useState("")
   const [ergebnis, setErgebnis] = useState("")
   const [ergebnis2, setErgebnis2] = useState("")
+  const [ergebnis3, setErgebnis3] = useState("")    
 
   function suche(){
     getGeburtsDatum(suchWert).then((value)=>{
@@ -39,13 +40,18 @@ function App() {
       console.log(ergebnis)
     })   
     
-    getGeburtsLand(suchWert).then((value)=>{
-      setErgebnis2(value)      
-      console.log(ergebnis)
+    getGeburtsLand(suchWert).then((value)=>{      
+        setErgebnis2(value)
+        console.log(ergebnis2)
     }) 
 
-  }
+     getBild(suchWert).then((value)=>{
+      setErgebnis3(value)      
+      console.log(ergebnis3)
+    }) 
 
+  }  
+  
   function textFeldchanged(val){
     setSuchWert(val.target.value)    
   }
@@ -79,7 +85,7 @@ function App() {
             color="primary" 
             style={{ margin: 8 }}
             size= "large"
-            onClick={suche}
+            onClick={suche}            
             disableElevation          
           >
             Suche Starten
@@ -91,10 +97,10 @@ function App() {
         <Grid item xs={10} md={6}>
           <Zentrum>
           <Box id="textA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
-           Ausgabe 1
+           Ausgabe 1    
 
            <h4>{ergebnis}</h4> 
-           <h4>{ergebnis2}</h4> 
+           <h4>{ergebnis2}</h4>
 
           </Box>
           </Zentrum>
@@ -102,9 +108,12 @@ function App() {
 
         <Grid item xs={10} md={2} >
           <Zentrum>
-          <Box id="bildA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
-           Ausgabe 2
-          </Box>  
+            <Box id="bildA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
+            Ausgabe 2 
+        
+            {ergebnis3}      
+                    
+            </Box>  
           </Zentrum>    
         </Grid>
       </Grid>

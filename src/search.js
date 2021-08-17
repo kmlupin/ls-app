@@ -136,21 +136,32 @@ export function getGeburtsDatum (search, language){
 export function getBild (search, language){
     const lang = language || 'de';
     const query = `
-    SELECT ?personLabel ?image WHERE {
-        BIND(${search}"@${lang} AS ?personLabel) ?person wdt:P18 ?image;          
-        rdfs:label ?personLabel.        
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]de". }
-    }
-    LIMIT 1
+     SELECT ?itemLabel ?pic WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }
+        ?item wdt:P18 ?pic.
+         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+      } LIMIT 1
     `;
 
     return axios.get(baseURL + encodeURI(query)).then((res, err) => {
         if (err) return null;
-    return axios
+
+        return axios
         .get(baseURL + encodeURI(query))
-        .then((res) => res.data.results.bindings[0]?.image.value
-        );        
-        });
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].pic &&
+            res.data.results.bindings[0].pic.value
+                ? res.data.results.bindings[0].pic.value
+                : null,
+        );
+    });
 };
 
 export function getBeruf (search, language){
