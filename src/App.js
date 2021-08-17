@@ -1,7 +1,7 @@
 import './App.css';
 
 import React, {useState} from 'react';
-import { ButtonGroup, Typography, Button, TextField, Box, Grid, Paper} from '@material-ui/core';
+import { ButtonGroup, Typography, Button, TextField, Box, Grid, Paper } from '@material-ui/core';
 import { withStyles, styled } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import FavoriteIcon from '@material-ui/icons/Favorite'; 
@@ -32,11 +32,11 @@ function App() {
   const [suchWert, setSuchWert] = useState("")
   const [ergebnis, setErgebnis] = useState("")
   const [ergebnis2, setErgebnis2] = useState("")
-  const [ergebnis3, setErgebnis3] = useState("")    
+  const [ergebnis3, setErgebnis3] = useState("")  
 
   function suche(){
     getGeburtsDatum(suchWert).then((value)=>{
-      setErgebnis(value)      
+      setErgebnis(value)          
       console.log(ergebnis)
     })   
     
@@ -48,13 +48,12 @@ function App() {
      getBild(suchWert).then((value)=>{
       setErgebnis3(value)      
       console.log(ergebnis3)
-    }) 
-
+    })
   }  
   
   function textFeldchanged(val){
     setSuchWert(val.target.value)    
-  }
+  } 
 
   return (
     <div className="App">
@@ -97,7 +96,7 @@ function App() {
         <Grid item xs={10} md={6}>
           <Zentrum>
           <Box id="textA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
-           Ausgabe 1    
+           Ausgabe 1
 
            <h4>{ergebnis}</h4> 
            <h4>{ergebnis2}</h4>
@@ -110,8 +109,8 @@ function App() {
           <Zentrum>
             <Box id="bildA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
             Ausgabe 2 
-        
-            {ergebnis3}      
+
+            <img src={ergebnis3} alt="" height="390" width="270"/>                  
                     
             </Box>  
           </Zentrum>    
