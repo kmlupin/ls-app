@@ -1,37 +1,53 @@
 //TEST AUSLAGERUNG
-import { getGeburtsDatum } from "./search";
-import { getGeburtsLand } from "./search";
-import { getGeburtsOrt } from "./search";
-import { getWikiId } from "./search";
-import { getBild } from "./search";
+import { getGeburtsOrt } from './search.js'
+import { getGeburtsLand } from './search.js';
+import { getBild } from './search.js';
+import { getGeburtsDatum } from './search.js';
+import { getBeruf } from './search.js';
+import { getFName } from './search.js';
+import { getLName } from './search.js';
 
 
-const [suchWert, setSuchWert] = null
-const [datum, setDatum] = null
-const [land, setLand] = null
-const [ort, setOrt] = null
-const [id, setID] = null
-const [bild, setBild] = null
 
 export function textFeldchanged(val){
     setSuchWert(val.target.value)    
-  }
+  } 
 
 export function suche(){
     getGeburtsDatum(suchWert).then((value)=>{
-        setDatum(value)      
-    }) 
-    getGeburtsLand(suchWert).then((value)=>{
-        setLand(value)      
-    })
-    getGeburtsOrt(suchWert).then((value)=>{
-        setOrt(value)      
-    })
-    getWikiId(suchWert).then((value)=>{
-        setID(value)      
-    })
-    getBild(suchWert).then((value)=>{
-        setBild(value)      
+      setDatum(value)          
+      console.log(geburtsDatum)
     })   
-}
+    
+    getGeburtsLand(suchWert).then((value)=>{      
+        setGLand(value)
+        console.log(geburtsLand)
+    }) 
+
+    getBild(suchWert).then((value)=>{
+      setBild(value)      
+      console.log(bild)
+    })
+
+    getGeburtsOrt(suchWert).then((value)=>{
+      setGOrt(value)      
+      console.log(geburtsOrt)
+    })
+
+    getBeruf(suchWert).then((value)=>{
+      setBeruf(value)      
+      console.log(beruf)
+    })
+
+    getFName(suchWert).then((value)=>{
+      setFName(value)      
+      console.log(fName)
+    })
+
+    getLName(suchWert).then((value)=>{
+      setLName(value)      
+      console.log(lName)
+    })
+  }  
+
 

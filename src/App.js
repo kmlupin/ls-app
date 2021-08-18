@@ -6,13 +6,13 @@ import { withStyles, styled } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import FavoriteIcon from '@material-ui/icons/Favorite'; 
 
-import { getWikiId } from './search.js'
 import { getGeburtsOrt } from './search.js'
 import { getGeburtsLand } from './search.js';
 import { getBild } from './search.js';
 import { getGeburtsDatum } from './search.js';
 import { getBeruf } from './search.js';
-
+import { getFName } from './search.js';
+import { getLName } from './search.js';
 
 const StyledRating = withStyles({
   iconFilled: {
@@ -27,33 +27,58 @@ const Zentrum = styled(Paper)(({ theme }) => ({
   textAlign: 'left',  
 }));
 
-function App() { 
+export function App() { 
   
   const [suchWert, setSuchWert] = useState("")
-  const [ergebnis, setErgebnis] = useState("")
-  const [ergebnis2, setErgebnis2] = useState("")
-  const [ergebnis3, setErgebnis3] = useState("")  
+  const [geburtsDatum, setDatum] = useState("")
+  const [geburtsLand, setGLand] = useState("")
+  const [bild, setBild] = useState("")  
+  const [geburtsOrt, setGOrt] = useState("") 
+  const [beruf, setBeruf] = useState("") 
+  const [fName, setFName] = useState("") 
+  const [lName, setLName] = useState("") 
 
   function suche(){
     getGeburtsDatum(suchWert).then((value)=>{
-      setErgebnis(value)          
-      console.log(ergebnis)
+      setDatum(value)          
+      console.log(geburtsDatum)
     })   
     
     getGeburtsLand(suchWert).then((value)=>{      
-        setErgebnis2(value)
-        console.log(ergebnis2)
+        setGLand(value)
+        console.log(geburtsLand)
     }) 
 
-     getBild(suchWert).then((value)=>{
-      setErgebnis3(value)      
-      console.log(ergebnis3)
+    getBild(suchWert).then((value)=>{
+      setBild(value)      
+      console.log(bild)
+    })
+
+    getGeburtsOrt(suchWert).then((value)=>{
+      setGOrt(value)      
+      console.log(geburtsOrt)
+    })
+
+    getBeruf(suchWert).then((value)=>{
+      setBeruf(value)      
+      console.log(beruf)
+    })
+
+    getFName(suchWert).then((value)=>{
+      setFName(value)      
+      console.log(fName)
+    })
+
+    getLName(suchWert).then((value)=>{
+      setLName(value)      
+      console.log(lName)
     })
   }  
   
   function textFeldchanged(val){
     setSuchWert(val.target.value)    
   } 
+  
 
   return (
     <div className="App">
@@ -98,8 +123,11 @@ function App() {
           <Box id="textA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
            Ausgabe 1
 
-           <h4>{ergebnis}</h4> 
-           <h4>{ergebnis2}</h4>
+          <h2>{fName} {lName} ist am {geburtsDatum} geboren.</h2>
+
+          <h2>{fName} {lName} ist in {geburtsOrt} Geboren und das liegt in {geburtsLand} .</h2>
+
+          <h2>Ihr Beruf ist {beruf}in.</h2>     
 
           </Box>
           </Zentrum>
@@ -110,7 +138,7 @@ function App() {
             <Box id="bildA" component="span" display="block" p={1} m={1} bgcolor="background.paper">
             Ausgabe 2 
 
-            <img src={ergebnis3} alt="" height="390" width="270"/>                  
+            <img src={bild} alt="" height="390" width="270"/>                  
                     
             </Box>  
           </Zentrum>    

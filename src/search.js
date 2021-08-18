@@ -81,7 +81,7 @@ export function getGeburtsLand (search, language){
         ?item wikibase:apiOutputItem mwapi:item.            
     }
     ?item wdt:P19 ?placeOfBirth.
-    ?placeOfBirth wdt:P17 ?country.
+    ?placeOfBirth (wdt:P17+) ?country.
         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
     } LIMIT 1
     `;
@@ -101,6 +101,7 @@ export function getGeburtsLand (search, language){
     });
 };
 
+//Ausgabe des GeburtsDatum
 export function getGeburtsDatum (search, language){
     const lang = 'de';
     const query = `    
@@ -164,6 +165,7 @@ export function getBild (search, language){
     });
 };
 
+//Ausgabe des Berufs
 export function getBeruf (search, language){
     const lang = language || 'de';
     const query = `
@@ -194,5 +196,70 @@ export function getBeruf (search, language){
         );
     });
 };
+
+//Ausgabe des vollständigen Namens
+export function getFName (search, language){
+    const lang = language || 'de';
+    const query = `
+    SELECT ?itemLabel ?givenNameLabel WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P735 ?givenName.        
+         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+      } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].givenNameLabel &&
+            res.data.results.bindings[0].givenNameLabel.value
+                ? res.data.results.bindings[0].givenNameLabel.value
+                : null,
+        );
+    });
+};
+
+export function getLName (search, language){
+    const lang = language || 'de';
+    const query = `
+    SELECT ?itemLabel ?givenNameLabel WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P734 ?givenName.        
+         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+      } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].givenNameLabel &&
+            res.data.results.bindings[0].givenNameLabel.value
+                ? res.data.results.bindings[0].givenNameLabel.value
+                : null,
+        );
+    });
+};
+
+
 
 
