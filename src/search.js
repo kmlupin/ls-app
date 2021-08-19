@@ -197,7 +197,7 @@ export function getBeruf (search, language){
     });
 };
 
-//Ausgabe des vollständigen Namens
+//Ausgabe des Vornamen
 export function getFName (search, language){
     const lang = language || 'de';
     const query = `
@@ -229,6 +229,7 @@ export function getFName (search, language){
     });
 };
 
+//Ausgabe des Nachnamen
 export function getLName (search, language){
     const lang = language || 'de';
     const query = `
@@ -259,6 +260,72 @@ export function getLName (search, language){
         );
     });
 };
+
+//Ausgabe des Geschlechts
+export function getGeschlecht (search, language){
+    const lang = language || 'de';
+    const query = `
+    SELECT ?itemLabel ?geschlechtLabel WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P21 ?geschlecht.        
+         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+      } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].geschlechtLabel &&
+            res.data.results.bindings[0].geschlechtLabel.value
+                ? res.data.results.bindings[0].geschlechtLabel.value
+                : null,
+        );
+    });
+};
+
+//Ausgabe des EntityTypes
+export function getType (search, language){
+    const lang = language || 'de';
+    const query = `
+    SELECT ?itemLabel ?typeLabel WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P31 ?type.       
+         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+      } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].typeLabel &&
+            res.data.results.bindings[0].typeLabel.value
+                ? res.data.results.bindings[0].typeLabel.value
+                : null,
+        );
+    });
+};
+
+
 
 
 
