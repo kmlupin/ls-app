@@ -101,9 +101,74 @@ export function getGeburtsLand (search, language){
     });
 };
 
+//Ausgabe SterbeOrt
+export function getSterbeOrt (search, language){
+    const lang = language || 'de';    
+    const query = `
+    SELECT ?itemLabel ?placeOfDeathLabel WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+            }
+        ?item wdt:P20 ?placeOfDeath.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+    } LIMIT 1
+    `;
+
+    return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].placeOfDeathLabel &&
+            res.data.results.bindings[0].placeOfDeathLabel.value
+                ? res.data.results.bindings[0].placeOfDeathLabel.value
+                : null,
+        );
+    });
+};
+
+//Ausgabe SterbeLand
+export function getSterbeLand (search, language){
+    const lang = language || 'de';
+    const query = `
+    SELECT ?itemLabel ?countryLabel WHERE {
+    SERVICE wikibase:mwapi {
+        bd:serviceParam wikibase:endpoint "www.wikidata.org";
+            wikibase:api "EntitySearch";
+            mwapi:search "${search}";
+            mwapi:language "${lang}".
+        ?item wikibase:apiOutputItem mwapi:item.            
+    }
+    ?item wdt:P20 ?placeOfDeath.
+    ?placeOfDeath (wdt:P17+) ?country.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+    } LIMIT 1
+    `;
+
+    return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].countryLabel &&
+            res.data.results.bindings[0].countryLabel.value
+                ? res.data.results.bindings[0].countryLabel.value
+                : null,
+        );
+    });
+};
+
 //Ausgabe des GeburtsDatum
 export function getGeburtsDatum (search, language){
-    const lang = 'de';
+    const lang = 'de';    
     const query = `    
     SELECT ?itemLabel (CONCAT(STR(DAY(?dateOfBirth)),".",STR(MONTH(?dateOfBirth)),".",STR(YEAR(?dateOfBirth))) as ?dateOfBirthStr) WHERE {
         SERVICE wikibase:mwapi {
@@ -128,6 +193,38 @@ export function getGeburtsDatum (search, language){
             res.data.results.bindings[0].dateOfBirthStr &&
             res.data.results.bindings[0].dateOfBirthStr.value
                 ? res.data.results.bindings[0].dateOfBirthStr.value
+                : null,
+        );
+    });
+};
+
+//Ausgabe des TodesTages
+export function getSterbeDatum (search, language){
+    const lang = 'de';
+    const query = `    
+    SELECT ?itemLabel (CONCAT(STR(DAY(?dateOfDeath)),".",STR(MONTH(?dateOfDeath)),".",STR(YEAR(?dateOfDeath))) as ?dateOfDeathStr) WHERE {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+                wikibase:api "EntitySearch";
+                mwapi:search "${search}";
+                mwapi:language "${lang}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }
+        ?item wdt:P570 ?dateOfDeath.
+         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${lang}". }
+      } LIMIT 1
+    `;
+
+    return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].dateOfDeathStr &&
+            res.data.results.bindings[0].dateOfDeathStr.value
+                ? res.data.results.bindings[0].dateOfDeathStr.value
                 : null,
         );
     });
