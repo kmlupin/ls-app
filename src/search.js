@@ -485,7 +485,7 @@ export function getVater (search){
             ?item wikibase:apiOutputItem mwapi:item.            
         }        
         ?item wdt:P22 ?father.       
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language}". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language},en". }
     } LIMIT 1
     `;
 
@@ -499,6 +499,36 @@ export function getVater (search){
             res.data.results.bindings[0].fatherLabel &&
             res.data.results.bindings[0].fatherLabel.value
                 ? res.data.results.bindings[0].fatherLabel.value
+                : null,
+        );
+    });
+};
+
+export function getMutter (search){
+    const query = `
+    SELECT ?itemLabel ?motherLabel WHERE  {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+            wikibase:api "EntitySearch";
+            mwapi:search "${search}";
+            mwapi:language "${language}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P25 ?mother.      
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language},en". }
+    } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].motherLabel &&
+            res.data.results.bindings[0].motherLabel.value
+                ? res.data.results.bindings[0].motherLabel.value
                 : null,
         );
     });
