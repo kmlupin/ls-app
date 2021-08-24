@@ -112,7 +112,7 @@ export function getSterbeOrt (search){
             ?item wikibase:apiOutputItem mwapi:item.            
         }
         ?item wdt:P20 ?placeOfDeath.
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language}". }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language}, en". }
     } LIMIT 1
     `;
 
@@ -473,6 +473,37 @@ export function getTodesUrsache (search){
     });
 };
 
+//Ausgabe der TodesGrundBeschreibung
+export function getTodesUrsacheBeschreibung (search){
+    const query = `
+    SELECT ?itemLabel ?causeOfDeathDescription WHERE  {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+            wikibase:api "EntitySearch";
+            mwapi:search "${search}";
+            mwapi:language "${language}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P509 ?causeOfDeath.       
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language}". }
+    } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].causeOfDeathDescription &&
+            res.data.results.bindings[0].causeOfDeathDescription.value
+                ? res.data.results.bindings[0].causeOfDeathDescription.value
+                : null,
+        );
+    });
+};
+
 //Ausgabe des Vaters
 export function getVater (search){
     const query = `
@@ -535,6 +566,7 @@ export function getMutter (search){
     });
 };
 
+//Ausgabe der Sprache
 export function getSprache (search){
     const query = `
     SELECT ?itemLabel ?languageLabel WHERE  {
@@ -560,6 +592,98 @@ export function getSprache (search){
             res.data.results.bindings[0].languageLabel &&
             res.data.results.bindings[0].languageLabel.value
                 ? res.data.results.bindings[0].languageLabel.value
+                : null,
+        );
+    });
+};
+
+//Ausgabe der EthnischenGruppe
+
+export function getEthnicGroup (search){
+    const query = `
+    SELECT ?itemLabel ?ethnicGroupLabel WHERE  {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+            wikibase:api "EntitySearch";
+            mwapi:search "${search}";
+            mwapi:language "${language}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P172 ?ethnicGroup.      
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language},en". }
+    } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].ethnicGroupLabel &&
+            res.data.results.bindings[0].ethnicGroupLabel.value
+                ? res.data.results.bindings[0].ethnicGroupLabel.value
+                : null,
+        );
+    });
+};
+
+export function getReligion (search){
+    const query = `
+    SELECT ?itemLabel ?religionLabel WHERE  {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+            wikibase:api "EntitySearch";
+            mwapi:search "${search}";
+            mwapi:language "${language}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P140 ?religion.      
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language},en". }
+    } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].religionLabel &&
+            res.data.results.bindings[0].religionLabel.value
+                ? res.data.results.bindings[0].religionLabel.value
+                : null,
+        );
+    });
+};
+
+export function getReligionBeschreibung (search){
+    const query = `
+    SELECT ?itemLabel ?religionDescription WHERE  {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+            wikibase:api "EntitySearch";
+            mwapi:search "${search}";
+            mwapi:language "${language}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P140 ?religion.      
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language},en". }
+    } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].religionDescription &&
+            res.data.results.bindings[0].religionDescription.value
+                ? res.data.results.bindings[0].religionDescription.value
                 : null,
         );
     });

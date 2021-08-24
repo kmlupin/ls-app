@@ -5,7 +5,7 @@ import { Button, TextField, Grid } from '@material-ui/core';
 
 import { 
   getGeburtsOrt, getGeburtsLand, getBild, getGeburtsDatum, getBeruf, getFName, getLName, getType, getGeschlecht, getSterbeDatum, getSterbeLand, getSterbeOrt, getWikiId,
-  getTodesArt, getTodesUrsache, getVater, getMutter, getSprache
+  getTodesArt, getTodesUrsache, getVater, getMutter, getSprache, getEthnicGroup, getReligion, getReligionBeschreibung, getTodesUrsacheBeschreibung
 } from './searchPerson.js'
 
 export function Suche(props) { 
@@ -29,6 +29,10 @@ export function Suche(props) {
   const [vater, setVater] = useState("")
   const [mutter, setMutter] = useState("")
   const [sprache, setSprache] = useState("")
+  const [ethnischeGruppe, setEthnischeGruppe] = useState("")
+  const [religion, setReligion] = useState("")
+  const [religionBeschreibung, setReligionBeschreibung] = useState("")
+  const [todesUrsacheBeschreibung, setTodesUrsacheBeschreibung] = useState("")
 
 
 
@@ -51,7 +55,11 @@ export function Suche(props) {
         todesArt:todesArt,   
         vater:vater,  
         mutter:mutter,
-        sprache:sprache
+        sprache:sprache,
+        ethnischeGruppe:ethnischeGruppe,
+        religion:religion,
+        religionBeschreibung:religionBeschreibung,
+        todesUrsacheBeschreibung:todesUrsacheBeschreibung
       })
   } 
 
@@ -143,8 +151,27 @@ export function Suche(props) {
     })
 
     getSprache(wikiID).then((value)=>{
-      setSprache(value) 
-      console.log(sprache)
+      setSprache(value)
+      uebergebeWerteAnApp()
+    })
+
+    getEthnicGroup(wikiID).then((value)=>{
+      setEthnischeGruppe(value)
+      uebergebeWerteAnApp()
+    })
+
+    getReligion(wikiID).then((value)=>{
+      setReligion(value)
+      uebergebeWerteAnApp()
+    })
+
+    getReligionBeschreibung(wikiID).then((value)=>{
+      setReligionBeschreibung(value)
+      uebergebeWerteAnApp()
+    })
+
+    getTodesUrsacheBeschreibung(wikiID).then((value)=>{
+      setTodesUrsacheBeschreibung(value)
       uebergebeWerteAnApp()
     })
   }  

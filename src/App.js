@@ -32,6 +32,10 @@ export function App() {
   const [vater, setVater] = useState("")
   const [mutter, setMutter] = useState("")
   const [sprache, setSprache] = useState("")
+  const [ethnischeGruppe, setEthnischeGruppe] = useState("")
+  const [religion, setReligion] = useState("")
+  const [religionBeschreibung, setReligionBeschreibung] = useState("")
+  const [todesUrsacheBeschreibung, setTodesUrsacheBeschreibung] = useState("")
   
   let callback = (values) => { 
     setWikiId(values.wikiID)   
@@ -52,6 +56,10 @@ export function App() {
     setVater(values.vater)
     setMutter(values.mutter)
     setSprache(values.sprache)
+    setEthnischeGruppe(values.ethnischeGruppe)
+    setReligion(values.religion)
+    setReligionBeschreibung(values.religionBeschreibung)
+    setTodesUrsacheBeschreibung(values.todesUrsacheBeschreibung)
   }
 
   //Inhalte für die Ausgabe für Mensch
@@ -67,6 +75,10 @@ export function App() {
   let mutterAusgabe = "";
   let bild1 = "";
   let spracheAusgabe = "";
+  let ethnischeGruppeAusgabe = "";
+  let religionAusgabe = "";
+  let religionBeschreibungAusgabe = "";
+  let todesUrsacheBeschreibungAusgabe = "";
 
   //Wenn Mensch
   if (type === "Mensch"){
@@ -87,8 +99,7 @@ export function App() {
     //Ausgabe GeburtsLand
     if (geburtsLand !== null){
       geburtsLandAusgebe = <h3>"{geburtsOrt}" ist ein Ort der in "{geburtsLand}" liegt.</h3> 
-    } 
-  
+    }  
 
     //Ausgabe Beruf.
     if (beruf !== null){
@@ -113,11 +124,13 @@ export function App() {
         }
       }
     }   
+
     //Ausgabe SterbeOrt
     if (sterbeDatum !== null && sterbeOrt !== null){
       todesOrtAusgeben = <h3>Am {sterbeDatum} ist {fName} {lName} in "{sterbeOrt}" gestorben.<br /><br />
                          "{sterbeOrt}" ist ein Ort der in "{sterbeLand}" liegt.</h3>; 
     }
+
     //Ausgabe des TodesGrundes und TodesArt
     if (todesArt !== null){
       if (geschlecht === "weiblich"){
@@ -129,8 +142,12 @@ export function App() {
 
       if (todesUrsache !== null){          
           todesUrsacheAusgeben = <h3>Die genaue Todesursache war eine "{todesUrsache}".</h3>
+          if (todesUrsacheBeschreibung !== null){
+            todesUrsacheBeschreibungAusgabe = <h3>"{todesUrsache}" bedeutet: <br/>{todesUrsacheBeschreibung}.</h3>
+          }
       }      
-    }    
+    }   
+
     //Ausgabe der Eltern
     //Ausgabe Vater
     if (vater !== null){
@@ -167,11 +184,36 @@ export function App() {
       }      
     }
 
+    //Ausgabe der Religion
+    if (religion !== null){
+      if (geschlecht === "weiblich"){
+        religionAusgabe = <h3>Sie gehört der {religion} Religion an.</h3>
+      }
+      else {
+        religionAusgabe = <h3>Er gehört der {religion} Religion an.</h3>
+      }
+    }
+    
+    //Ausgabe ReligionBeschreibung
+    if (religionBeschreibung !== null){
+      religionBeschreibungAusgabe = <h3>{religion} bedeutet: {religionBeschreibung}.</h3>
+    }
+
+
+    //Ausgabe der EthnischeGruppe
+    if (ethnischeGruppe !== null){
+      if (geschlecht === "weiblich"){
+        ethnischeGruppeAusgabe = <h3> Sie gehört der ethnischen Gruppe der {ethnischeGruppe} an.</h3>
+      }
+      else {
+        ethnischeGruppeAusgabe = <h3> Er gehört der ethnischen Gruppe der {ethnischeGruppe} an.</h3>
+      }
+    }
+
     //Ausgabe Bild wenn vorhanden und menschlich ist.
     if (bild !== null){
       bild1 = <img src={bild} alt="" height="390" width="270"/>;  
-    }
-    
+    }   
   } 
 
   return (
@@ -194,10 +236,14 @@ export function App() {
             {todesOrtAusgeben}
             {todesArtAusgeben} 
             {todesUrsacheAusgeben}
+            {todesUrsacheBeschreibungAusgabe}
             {berufAusgabe}    
             {vaterAusgabe} 
             {mutterAusgabe} 
             {spracheAusgabe}   
+            {ethnischeGruppeAusgabe}
+            {religionAusgabe}
+            {religionBeschreibungAusgabe}
 
             </Box>
             </Zentrum>
