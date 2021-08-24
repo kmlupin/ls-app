@@ -5,8 +5,8 @@ import { Button, TextField, Grid } from '@material-ui/core';
 
 import { 
   getGeburtsOrt, getGeburtsLand, getBild, getGeburtsDatum, getBeruf, getFName, getLName, getType, getGeschlecht, getSterbeDatum, getSterbeLand, getSterbeOrt, getWikiId,
-  getTodesArt, getTodesUrsache, getVater, getMutter
-} from './search.js'
+  getTodesArt, getTodesUrsache, getVater, getMutter, getSprache
+} from './searchPerson.js'
 
 export function Suche(props) { 
   
@@ -28,6 +28,7 @@ export function Suche(props) {
   const [todesArt, setTodesArt] = useState("")
   const [vater, setVater] = useState("")
   const [mutter, setMutter] = useState("")
+  const [sprache, setSprache] = useState("")
 
 
 
@@ -49,7 +50,8 @@ export function Suche(props) {
         todesUrsache:todesUrsache,
         todesArt:todesArt,   
         vater:vater,  
-        mutter:mutter
+        mutter:mutter,
+        sprache:sprache
       })
   } 
 
@@ -132,13 +134,17 @@ export function Suche(props) {
 
     getVater(wikiID).then((value)=>{
       setVater(value) 
-      console.log(vater)
       uebergebeWerteAnApp()
     })
 
     getMutter(wikiID).then((value)=>{
       setMutter(value) 
-      console.log(mutter)
+      uebergebeWerteAnApp()
+    })
+
+    getSprache(wikiID).then((value)=>{
+      setSprache(value) 
+      console.log(sprache)
       uebergebeWerteAnApp()
     })
   }  

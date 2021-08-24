@@ -504,6 +504,7 @@ export function getVater (search){
     });
 };
 
+//Ausgabe Mutter
 export function getMutter (search){
     const query = `
     SELECT ?itemLabel ?motherLabel WHERE  {
@@ -529,6 +530,36 @@ export function getMutter (search){
             res.data.results.bindings[0].motherLabel &&
             res.data.results.bindings[0].motherLabel.value
                 ? res.data.results.bindings[0].motherLabel.value
+                : null,
+        );
+    });
+};
+
+export function getSprache (search){
+    const query = `
+    SELECT ?itemLabel ?languageLabel WHERE  {
+        SERVICE wikibase:mwapi {
+            bd:serviceParam wikibase:endpoint "www.wikidata.org";
+            wikibase:api "EntitySearch";
+            mwapi:search "${search}";
+            mwapi:language "${language}".
+            ?item wikibase:apiOutputItem mwapi:item.            
+        }        
+        ?item wdt:P103 ?language.      
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],${language},en". }
+    } LIMIT 1
+    `;
+
+   return axios.get(baseURL + encodeURI(query)).then((res, err) => {
+        if (err) return null;
+
+        return axios
+        .get(baseURL + encodeURI(query))
+        .then((res) =>
+            res.data.results.bindings[0] &&
+            res.data.results.bindings[0].languageLabel &&
+            res.data.results.bindings[0].languageLabel.value
+                ? res.data.results.bindings[0].languageLabel.value
                 : null,
         );
     });

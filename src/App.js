@@ -31,6 +31,7 @@ export function App() {
   const [todesArt, setTodesArt] = useState("")
   const [vater, setVater] = useState("")
   const [mutter, setMutter] = useState("")
+  const [sprache, setSprache] = useState("")
   
   let callback = (values) => { 
     setWikiId(values.wikiID)   
@@ -50,6 +51,7 @@ export function App() {
     setTodesArt(values.todesArt)
     setVater(values.vater)
     setMutter(values.mutter)
+    setSprache(values.sprache)
   }
 
   //Inhalte für die Ausgabe für Mensch
@@ -64,6 +66,7 @@ export function App() {
   let vaterAusgabe = "";
   let mutterAusgabe = "";
   let bild1 = "";
+  let spracheAusgabe = "";
 
   //Wenn Mensch
   if (type === "Mensch"){
@@ -100,7 +103,7 @@ export function App() {
         }       
       }    
       //Ausgabe Beruf männlich  
-      else if (geschlecht === "männlich"){        
+      else {        
         if (sterbeDatum === null){
           berufAusgabe = <h3>Er Arbeitet als {beruf}.</h3>
         }
@@ -153,8 +156,18 @@ export function App() {
         vaterAusgabe = <h3>Der Name vom Vater kennt man nicht.</h3>
       }       
     } 
-    
-     //Ausgabe Bild wenn vorhanden und menschlich ist.
+
+    //Ausgabe der GesprochenenSprache
+    if (sprache !== null){
+      if (geschlecht === "weiblich"){
+        spracheAusgabe = <h3>Ihre natürliche sprache ist "{sprache}".</h3>
+      }
+      else {
+        spracheAusgabe = <h3>Seine natürliche sprache ist "{sprache}".</h3>
+      }      
+    }
+
+    //Ausgabe Bild wenn vorhanden und menschlich ist.
     if (bild !== null){
       bild1 = <img src={bild} alt="" height="390" width="270"/>;  
     }
@@ -183,7 +196,8 @@ export function App() {
             {todesUrsacheAusgeben}
             {berufAusgabe}    
             {vaterAusgabe} 
-            {mutterAusgabe}    
+            {mutterAusgabe} 
+            {spracheAusgabe}   
 
             </Box>
             </Zentrum>
