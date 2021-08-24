@@ -3,19 +3,10 @@ import './App.css';
 import React, {useState} from 'react';
 import { Button, TextField, Grid } from '@material-ui/core';
 
-import { getGeburtsOrt } from './search.js'
-import { getGeburtsLand } from './search.js';
-import { getBild } from './search.js';
-import { getGeburtsDatum } from './search.js';
-import { getBeruf } from './search.js';
-import { getFName } from './search.js';
-import { getLName } from './search.js';
-import { getType } from './search.js';
-import { getGeschlecht } from './search.js';
-import { getSterbeDatum } from './search.js';
-import { getSterbeLand } from './search.js';
-import { getSterbeOrt } from './search.js';
-import { getWikiId } from './search.js';
+import { 
+  getGeburtsOrt, getGeburtsLand, getBild, getGeburtsDatum, getBeruf, getFName, getLName, getType, getGeschlecht, getSterbeDatum, getSterbeLand, getSterbeOrt, getWikiId,
+  getTodesArt, getTodesUrsache, getVater
+} from './search.js'
 
 export function Suche(props) { 
   
@@ -33,6 +24,10 @@ export function Suche(props) {
   const [sterbeDatum, setSterbeDatum] = useState ("")
   const [sterbeOrt, setSterbeOrt] = useState("")
   const [sterbeLand, setSterbeLand] = useState("")
+  const [todesUrsache, setTodesUrsache] = useState("")
+  const [todesArt, setTodesArt] = useState("")
+  const [vater, setVater] = useState("")
+
 
 
   function uebergebeWerteAnApp() {
@@ -49,7 +44,10 @@ export function Suche(props) {
         sterbeDatum: sterbeDatum,
         sterbeOrt:sterbeOrt,
         sterbeLand:sterbeLand,
-        wikiID:wikiID        
+        wikiID:wikiID, 
+        todesUrsache:todesUrsache,
+        todesArt:todesArt,   
+        vater:vater   
       })
   } 
 
@@ -78,8 +76,7 @@ export function Suche(props) {
     
     getSterbeDatum(wikiID).then((value)=>{
         setSterbeDatum(value)               
-        uebergebeWerteAnApp()
-        console.log(sterbeDatum)          
+        uebergebeWerteAnApp()         
     })
     
     getGeburtsLand(wikiID).then((value)=>{      
@@ -119,6 +116,21 @@ export function Suche(props) {
 
     getSterbeOrt(wikiID).then((value)=>{
       setSterbeOrt(value)      
+      uebergebeWerteAnApp()
+    })
+
+    getTodesArt(wikiID).then((value)=>{
+      setTodesArt(value)      
+      uebergebeWerteAnApp()
+    })
+
+    getTodesUrsache(wikiID).then((value)=>{
+      setTodesUrsache(value) 
+      uebergebeWerteAnApp()
+    })
+
+    getVater(wikiID).then((value)=>{
+      setVater(value) 
       uebergebeWerteAnApp()
     })
   }  
